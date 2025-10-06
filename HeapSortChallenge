@@ -1,0 +1,76 @@
+import java.util.Random;
+
+public class HeapSortChallenge {
+
+    void maxHeapify(int[] A, int n, int i) {
+        int maior = i;           // Assume que o maior é o nó atual
+        int esq = 2 * i + 1;     // Índice do filho esquerdo
+        int dir = 2 * i + 2;     // Índice do filho direito
+
+        // Verifica se filho esquerdo é maior que o pai
+        if (esq < n && A[esq] > A[maior])
+            maior = esq;
+
+        // Verifica se filho direito é maior que o maior atual
+        if (dir < n && A[dir] > A[maior])
+            maior = dir;
+
+        // Se o maior não for o nó atual, troca e continua recursivamente
+        if (maior != i) {
+            int temp = A[i];
+            A[i] = A[maior];
+            A[maior] = temp;
+            maxHeapify(A, n, maior);
+        }
+    }
+
+    // Constrói a Max-Heap a partir de um vetor desordenado
+    void buildMaxHeap(int[] A, int n) {
+        // Começa do último nó pai até a raiz
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            maxHeapify(A, n, i);
+        }
+    }
+
+    // Ordena o vetor em ordem crescente usando Max-Heap
+    void heapSort(int[] A) {
+        int n = A.length;
+        buildMaxHeap(A, n);
+
+        //extrai elementos da heap um por um
+        for (int i = n - 1; i > 0; i--) {
+            // Move o maior elemento (raiz) para o final do vetor
+            int temp = A[0];
+            A[0] = A[i];
+            A[i] = temp;
+
+            // Aplica maxHeapify na heap reduzida
+            maxHeapify(A, i, 0);
+        }
+    }
+
+    public static void main(String[] args) {
+        HeapSortChallenge hs = new HeapSortChallenge();
+        Random rand = new Random();
+        int[] A = new int[20];
+
+        // Gerar 20 números aleatórios entre 1 e 100
+        for (int i = 0; i < A.length; i++) {
+            A[i] = rand.nextInt(100) + 1;
+        }
+
+        System.out.println("Vetor original:");
+        for (int v : A) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+
+        hs.heapSort(A);
+
+        System.out.println("\nVetor ordenado (crescente):");
+        for (int v : A) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+    }
+}
