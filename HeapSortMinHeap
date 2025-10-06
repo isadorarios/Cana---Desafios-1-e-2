@@ -1,0 +1,112 @@
+import java.util.Random;
+
+public class HeapSortMinHeap {
+
+    // Mantém a propriedade de Max-Heap para o nó i
+    void maxHeapify(int[] A, int n, int i) {
+        int maior = i;
+        int esq = 2 * i + 1;    
+        int dir = 2 * i + 2;     
+
+        if (esq < n && A[esq] > A[maior])
+            maior = esq;
+        if (dir < n && A[dir] > A[maior])
+            maior = dir;
+
+        if (maior != i) {
+            int temp = A[i];
+            A[i] = A[maior];
+            A[maior] = temp;
+            maxHeapify(A, n, maior);
+        }
+    }
+
+    void buildMaxHeap(int[] A, int n) {
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            maxHeapify(A, n, i);
+        }
+    }
+
+    void heapSortAscending(int[] A) {
+        int n = A.length;
+        buildMaxHeap(A, n);
+
+        for (int i = n - 1; i > 0; i--) {
+            int temp = A[0];
+            A[0] = A[i];
+            A[i] = temp;
+            maxHeapify(A, i, 0);
+        }
+    }
+
+    // Mantém a propriedade de Min-Heap para o nó i
+    void minHeapify(int[] A, int n, int i) {
+        int menor = i;           // Assume que o menor é o nó atual
+        int esq = 2 * i + 1;     // Índice do filho esquerdo
+        int dir = 2 * i + 2;     // Índice do filho direito
+
+        // Verifica se filho esquerdo é menor que o pai
+        if (esq < n && A[esq] < A[menor])
+            menor = esq;
+        // Verifica se filho direito é menor que o menor atual
+        if (dir < n && A[dir] < A[menor])
+            menor = dir;
+
+        // Se o menor não for o nó atual, troca e continua recursivamente
+        if (menor != i) {
+            int temp = A[i];
+            A[i] = A[menor];
+            A[menor] = temp;
+            minHeapify(A, n, menor);
+        }
+    }
+
+    // Constrói a Min-Heap a partir de um vetor desordenado
+    void buildMinHeap(int[] A, int n) {
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            minHeapify(A, n, i);
+        }
+    }
+
+    // Ordena o vetor em ordem decrescente usando Min-Heap
+    void heapSortDescending(int[] A) {
+        int n = A.length;
+        buildMinHeap(A, n);
+
+        // Extrai elementos da heap um por um
+        for (int i = n - 1; i > 0; i--) {
+            int temp = A[0];
+            A[0] = A[i];
+            A[i] = temp;
+            minHeapify(A, i, 0);
+        }
+    }
+
+    public static void main(String[] args) {
+        HeapSortMinHeap sorter = new HeapSortMinHeap();
+        Random rand = new Random();
+        int[] original = new int[20];
+
+        for (int i = 0; i < original.length; i++) {
+            original[i] = rand.nextInt(100) + 1;
+        }
+
+        System.out.println("Vetor original:");
+        for (int v : original) System.out.print(v + " ");
+        System.out.println();
+
+        // Clonar vetor para cada tipo de ordenação
+        int[] maxHeapArray = original.clone();
+        int[] minHeapArray = original.clone();
+
+        sorter.heapSortAscending(maxHeapArray);
+        System.out.println("\nVetor ordenado (crescente - Max-Heap):");
+        for (int v : maxHeapArray) System.out.print(v + " ");
+        System.out.println();
+
+        sorter.heapSortDescending(minHeapArray);
+        System.out.println("\nVetor ordenado (decrescente - Min-Heap):");
+        for (int v : minHeapArray) System.out.print(v + " ");
+        System.out.println();
+    }
+}
